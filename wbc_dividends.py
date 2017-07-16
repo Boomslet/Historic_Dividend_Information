@@ -42,5 +42,5 @@ for i in range(0, 421, 6):                         # iterating by 6 allows i to 
     franked = data[i + 2].text.strip()[0] == "F"   # checks if the 3rd element of the row begins with "F" for "Fully [franked]"
 
     print('{:12}'  '{:.2f}'  '  {:9}'  ' {:}'  '{:.2f}'
-          .format(date[:10], cps, str(franked),  "$", cps * units_held))  
-      # slicing ensures only the 10 characters representing the date are printed
+          .format(date[:10], cps, str(franked),  "$", cps * units_held))
+    # slicing ensures only the 10 characters representing the date are printed
