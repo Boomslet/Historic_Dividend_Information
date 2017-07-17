@@ -39,7 +39,7 @@ for i in range(0, 421, 6):                         # iterating by 6 allows i to 
 
     cps = float(data[i + 1].text.strip()) / 100
 
-    franked = data[i + 2].text.strip()[0] == "F"   # checks if the 3rd element of the row begins with "F" for "Fully [franked]"
+    franked = data[i + 2].text.strip()[0] == "F"   # checks if the 3rd element of the row begins with "F" for "Fully"
 
     print('{:12}'  '{:.2f}'  '  {:9}'  ' {:}'  '{:.2f}'
           .format(date[:10], cps, str(franked),  "$", cps * units_held))
