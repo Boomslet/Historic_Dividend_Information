@@ -23,7 +23,7 @@ from bs4 import BeautifulSoup
 
 units_held = 0
 
-url = ("https://www.westpac.com.au/about-westpac/investor-centre/dividend-information/dividend-payment-history/")
+url = "https://www.westpac.com.au/about-westpac/investor-centre/dividend-information/dividend-payment-history/"
 page = urllib.request.urlopen(url)
 soup = BeautifulSoup(page, "html.parser")          # default html parser
 data = soup.find_all("td")[3:]                     # slicing removes irrelevant data from the result set
