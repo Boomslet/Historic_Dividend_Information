@@ -46,14 +46,3 @@ for i in range(240, 0, -6):     # iterating by -6 allows i to correctly index ev
 
     print('{:13}'  '{:<6.2f}'  '{:10}'  '{:}'  '{:.2f}'
         .format(date, cps, franked, "$", ex_yield))
-
-
-
-
-
-
-
-
-
-
-
