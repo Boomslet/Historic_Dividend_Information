@@ -1,51 +1,47 @@
+import urllib.request
+
 """
-Web crawler (WIP)
+A script that retrieves historic data regarding dividends
+paid by Westpac Banking Corporation to shareholders
+on the ASX, 1983 - current.
+
+Expected Yield is calculated by (units_held * cps),
+and can be altered by adjusting units_held.
+
+Makes use of urllib module:
+https://docs.python.org/2/library/urllib.html#
+
+and the BeautifulSoup library:
+https://www.crummy.com/software/BeautifulSoup/
+
 Author: Mark Boon
-Date: 24/07/2017
-Version: -
+Date: 18/07/2017
+Version: 1.1
 """
 
-import lxml
-import os
-import requests
-from bs4 import BeautifulSoup, SoupStrainer
+from bs4 import BeautifulSoup
 
-url_list = []
-crawled_list = []
+units_held = 0
 
-
-def create_dirs(url_name):
-    ind = url.find(".") + 1
-    url_name = url_name[ind:]
-    if not os.path.exists(url_name):
-        print('Creating ' + url_name)
-        os.makedirs(url_name)
+url = "https://www.westpac.com.au/about-westpac/investor-centre/dividend-information/dividend-payment-history/"
+page = urllib.request.urlopen(url)
+soup = BeautifulSoup(page, "html.parser")       # default html parser
+data = soup.find_all("td")[3:]                  # slicing removes irrelevant data from the result set
 
 
-def write_file(path, data):
-    with open(path, 'a') as f:
-        f.write(soup.text)
+print("WBC Dividend Summary: \n")
+print('{:12}'  '{:6}'  '{:10}'  '{:}'
+      .format("Date", "CPS", "Franked", "Ex-Yield"))
 
+for i in range(0, 421, 6):      # iterating by 6 allows i to correctly index every row of information
 
-def crawler(base_url, element="body", keyword=None):
-    
-    url_list.append(base_url)
+    date = data[i].text.strip()
 
-    for url in url_list:
-        
-        crawled_list.append(url)
-        url_list.remove(url)
-        
-        page = requests.get(url).text
-        soup = BeautifulSoup(page, 'lxml')
-        data = soup.find_all(element)
-        print(soup.text.strip())
-        write_file("dump.txt", data.text)
+    cps = float(data[i + 1].text.strip()) / 100
 
-        for link in BeautifulSoup(page, 'lxml', parse_only=SoupStrainer('a', href=True)):
-            for link in soup.find_all('a'):
-                try:
-                    uDom = link['href']
-                    url_list.append(url + uDom)
-                except:
-                    pass
+    franked = str(data[i + 2].text.strip()[0] == "F")
+    # checks if the third element of the row begins with "F" for "Fully"
+
+    print('{:12}'  '{:<6.2f}'  '{:10}'  '{:}'  '{:.2f}'
+          .format(date[:10], cps, str(franked),  "$", cps * units_held))
+    # slicing ensures only the 10 characters representing the date are printed
