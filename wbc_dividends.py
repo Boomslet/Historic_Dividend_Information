@@ -16,7 +16,7 @@ https://www.crummy.com/software/BeautifulSoup/
 
 Author: Mark Boon
 Date: 18/07/2017
-Version: 1.1
+Version: 1.2
 """
 
 from bs4 import BeautifulSoup
@@ -42,6 +42,6 @@ for i in range(0, 421, 6):      # iterating by 6 allows i to correctly index eve
     franked = str(data[i + 2].text.strip()[0] == "F")
     # checks if the third element of the row begins with "F" for "Fully"
 
-    print('{:12}'  '{:<6.2f}'  '{:10}'  '{:}'  '{:.2f}'
-          .format(date[:10], cps, str(franked),  "$", cps * units_held))
+    print('{:12}'  '{:<6.0f}'  '{:10}'  '{:}'  '{:.2f}'
+          .format(date[:10], cps * 100, str(franked),  "$", cps * units_held))
     # slicing ensures only the 10 characters representing the date are printed
