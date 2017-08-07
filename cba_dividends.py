@@ -16,7 +16,7 @@ https://www.crummy.com/software/BeautifulSoup/
 
 Author: Mark Boon
 Date: 18/07/2017
-Version: 2.0
+Version: 2.1
 """
 
 from bs4 import BeautifulSoup
@@ -37,12 +37,12 @@ for i in range(240, 0, -6):     # iterating by -6 allows i to correctly index ev
 
     date = (data[i - 6].text.strip())
 
-    cps = (float(data[i - 5].text.strip()))
+    cps = float(data[i - 5].text.strip())
 
     franked = str(data[i - 4].text.strip()[0:3] == "100")
     # checks if the third element of the row is equal to 100
 
     ex_yield = (cps * units_held)
 
-    print('{:13}'  '{:<6.2f}'  '{:10}'  '{:}'  '{:.2f}'
-        .format(date, cps, franked, "$", ex_yield))
+    print('{:13}'  '{:<6.0f}'  '{:10}'  '{:}'  '{:.2f}'
+        .format(date, cps * 100, franked, "$", ex_yield))
