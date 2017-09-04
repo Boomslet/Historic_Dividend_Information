@@ -1,5 +1,3 @@
-import urllib.request
-
 """
 A script that retrieves historic data regarding dividends
 paid by Westpac Banking Corporation to shareholders
@@ -19,10 +17,11 @@ Date: 18/07/2017
 Version: 1.2
 """
 
+import urllib.request
 from bs4 import BeautifulSoup
 
-units_held = 0
 
+units_held = 0
 url = "https://www.westpac.com.au/about-westpac/investor-centre/dividend-information/dividend-payment-history/"
 page = urllib.request.urlopen(url)
 soup = BeautifulSoup(page, "html.parser")       # default html parser
@@ -34,11 +33,9 @@ print('{:12}'  '{:6}'  '{:10}'  '{:}'
       .format("Date", "CPS", "Franked", "Ex-Yield"))
 
 for i in range(0, 421, 6):      # iterating by 6 allows i to correctly index every row of information
-
+      
     date = data[i].text.strip()
-
     cps = float(data[i + 1].text.strip()) / 100
-
     franked = str(data[i + 2].text.strip()[0] == "F")
     # checks if the third element of the row begins with "F" for "Fully"
 
