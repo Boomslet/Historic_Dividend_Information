@@ -13,8 +13,8 @@ and the BeautifulSoup library:
 https://www.crummy.com/software/BeautifulSoup/
 
 Author: Mark Boon
-Date: 18/07/2017
-Version: 2.1
+Date: 15/09/2017
+Version: 2.1.1
 """
 
 import urllib.request
