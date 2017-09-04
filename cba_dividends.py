@@ -1,5 +1,3 @@
-import urllib.request
-
 """
 A script that retrieves historic data regarding dividends
 paid by Commonwealth Bank of Australia to shareholders
@@ -19,10 +17,11 @@ Date: 18/07/2017
 Version: 2.1
 """
 
+import urllib.request
 from bs4 import BeautifulSoup
 
-units_held = 0
 
+units_held = 0
 url = "http://www.sharedividends.com.au/cba+dividend+history"
 page = urllib.request.urlopen(url)
 soup = BeautifulSoup(page, 'html.parser')       # default html parser
@@ -36,12 +35,8 @@ print('{:13}'  '{:6}'  '{:10}'  '{:}'
 for i in range(240, 0, -6):     # iterating by -6 allows i to correctly index every row of information
 
     date = (data[i - 6].text.strip())
-
     cps = float(data[i - 5].text.strip())
-
     franked = str(data[i - 4].text.strip()[0:3] == "100")
-    # checks if the third element of the row is equal to 100
-
     ex_yield = (cps * units_held)
 
     print('{:13}'  '{:<6.0f}'  '{:10}'  '{:}'  '{:.2f}'
