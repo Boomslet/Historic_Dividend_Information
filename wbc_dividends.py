@@ -1,3 +1,5 @@
+import urllib.request
+
 """
 A script that retrieves historic data regarding dividends
 paid by Westpac Banking Corporation to shareholders
@@ -13,32 +15,33 @@ and the BeautifulSoup library:
 https://www.crummy.com/software/BeautifulSoup/
 
 Author: Mark Boon
-Date: 05/09/2017
-Version: 1.2.1
+Date: 21/12/2017
+Version: 2.0
 """
 
-import urllib.request
 from bs4 import BeautifulSoup
 
 
-units_held = 0
-url = "https://www.westpac.com.au/about-westpac/investor-centre/dividend-information/dividend-payment-history/"
-page = urllib.request.urlopen(url)
-soup = BeautifulSoup(page, "html.parser")       # default html parser
-data = soup.find_all("td")[3:]                  # slicing removes irrelevant data from the result set
+def wbc_summary(units=0):
+    url = "https://www.westpac.com.au/about-westpac/investor-centre/dividend-information/dividend-payment-history/"
+    page = urllib.request.urlopen(url)
+    soup = BeautifulSoup(page, "html.parser")  # default html parser
+    data = soup.find_all("td")[3:]  # slicing removes irrelevant data from the result set
 
+    print("WBC Dividend Summary: \n")
+    print('{:12}'  '{:6}'  '{:10}'  '{:}'
+          .format("Date", "CPS", "Franked", "Ex-Yield"))
 
-print("WBC Dividend Summary: \n")
-print('{:12}'  '{:6}'  '{:10}'  '{:}'
-      .format("Date", "CPS", "Franked", "Ex-Yield"))
+    # iterating by 6 allows i to correctly index every row of information
+    for i in range(0, 421, 6):
+        date = data[i].text.strip()
 
-for i in range(0, 421, 6):      # iterating by 6 allows i to correctly index every row of information
-      
-    date = data[i].text.strip()
-    cps = float(data[i + 1].text.strip()) / 100
-    franked = str(data[i + 2].text.strip()[0] == "F")
-    # checks if the third element of the row begins with "F" for "Fully"
+        cps = float(data[i + 1].text.strip()) / 100
 
-    print('{:12}'  '{:<6.0f}'  '{:10}'  '{:}'  '{:.2f}'
-          .format(date[:10], cps * 100, str(franked),  "$", cps * units_held))
-    # slicing ensures only the 10 characters representing the date are printed
+        # checks if the third element of the row begins with "F" for "Fully franked"
+        franked = str(data[i + 2].text.strip()[0] == "F")
+
+        ex_yield = (cps * units)
+
+        print('{:12}'  '{:<6.0f}'  '{:10}'  '{:}'  '{:.2f}'
+              .format(date[:10], cps * 100, str(franked), "$", ex_yield))
