@@ -1,3 +1,5 @@
+import urllib.request
+
 """
 A script that retrieves historic data regarding dividends
 paid by Commonwealth Bank of Australia to shareholders
@@ -13,31 +15,32 @@ and the BeautifulSoup library:
 https://www.crummy.com/software/BeautifulSoup/
 
 Author: Mark Boon
-Date: 15/09/2017
-Version: 2.1.1
+Date: 21/12/2017
+Version: 3.0
 """
 
-import urllib.request
 from bs4 import BeautifulSoup
 
 
-units_held = 0
-url = "http://www.sharedividends.com.au/cba+dividend+history"
-page = urllib.request.urlopen(url)
-soup = BeautifulSoup(page, 'html.parser')       # default html parser
-data = soup.find_all("td")
+def cba_summary(units=0):
+    url = "http://www.sharedividends.com.au/cba+dividend+history"
+    page = urllib.request.urlopen(url)
+    soup = BeautifulSoup(page, 'html.parser')  # default html parser
+    data = soup.find_all("td")
 
+    print("CBA Dividend Summary:b \n")
+    print('{:13}'  '{:6}'  '{:10}'  '{:}'
+          .format("Date", "CPS", "Franked", "Ex-Yield"))
 
-print("CBA Dividend Summary:b \n")
-print('{:13}'  '{:6}'  '{:10}'  '{:}'
-      .format("Date", "CPS", "Franked", "Ex-Yield"))
+    for i in range(240, 0, -6):  # iterating by -6 allows i to correctly index every row of information
 
-for i in range(240, 0, -6):     # iterating by -6 allows i to correctly index every row of information
+        date = (data[i - 6].text.strip())
 
-    date = (data[i - 6].text.strip())
-    cps = float(data[i - 5].text.strip())
-    franked = str(data[i - 4].text.strip()[0:3] == "100")
-    ex_yield = (cps * units_held)
+        cps = float(data[i - 5].text.strip())
 
-    print('{:13}'  '{:<6.0f}'  '{:10}'  '{:}'  '{:.2f}'
-        .format(date, cps * 100, franked, "$", ex_yield))
+        franked = str(data[i - 4].text.strip()[0:3] == "100")
+
+        ex_yield = (cps * units)
+
+        print('{:13}'  '{:<6.0f}'  '{:10}'  '{:}'  '{:.2f}'
+              .format(date, cps * 100, franked, "$", ex_yield))
